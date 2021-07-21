@@ -8,11 +8,11 @@ default: &default
 
 development:
   <<: *default
-  database: l-store_development
+  database: L-STORE_development
 
 test:
   <<: *default
-  database: l-store_test
+  database: L-STORE_test
 
 production:
   <<: *default

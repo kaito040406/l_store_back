@@ -10,7 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_17_015943) do
+ActiveRecord::Schema.define(version: 2021_07_20_062547) do
+
+  create_table "messages", charset: "utf8", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "title", null: false
+    t.string "body", null: false
+    t.string "image"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
+  create_table "tokens", charset: "utf8", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_id"
+    t.string "chanel_id", limit: 10, null: false
+    t.string "chanel_secret", limit: 32, null: false
+    t.string "messaging_token", limit: 172, null: false
+    t.string "login_token", limit: 172, null: false
+    t.string "access_id", limit: 12, null: false
+    t.index ["user_id"], name: "index_tokens_on_user_id"
+  end
 
   create_table "users", charset: "utf8", force: :cascade do |t|
     t.string "provider", default: "email", null: false
@@ -37,4 +59,6 @@ ActiveRecord::Schema.define(version: 2021_07_17_015943) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "messages", "users"
+  add_foreign_key "tokens", "users"
 end
