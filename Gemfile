@@ -50,3 +50,4 @@ gem 'aws-sdk-s3'
 gem 'fog-aws'
 gem "carrierwave"
 gem 'mini_magick'
+gem 'line-bot-api'

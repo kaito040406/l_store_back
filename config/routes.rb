@@ -9,6 +9,18 @@ Rails.application.routes.draw do
       # end
       resources :messages
       resources :tokens
+
+      resources :tokens, param: :access_id do
+        resources :line_costmers, only: [:create]
+      end
+
+      resources :tokens, param: :user_id do
+        resources :line_costmers, except: [:create]
+      end
+
+      resources :line_costmers do
+        resources :chats
+      end
       
 
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {

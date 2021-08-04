@@ -6,6 +6,7 @@ class Api::V1::MessagesController < ApplicationController
   end
 
   def create
+    begin
       # ユーザー情報をセット
       result = insert(current_api_v1_user.id,params[:title],params[:body],params[:image])
 
@@ -32,6 +33,9 @@ class Api::V1::MessagesController < ApplicationController
       end
 
       render json: { is_login: true, data: msg }
+    rescue => e
+      render json: { is_login: true, data: e }
+    end
 
   end
 
