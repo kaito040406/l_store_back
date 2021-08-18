@@ -187,7 +187,7 @@ class LineCommonsController < ApplicationController
     body = name + 
           "さんからメッセージを受信しました。" + 
           "\n" + 
-          "http://" +
+          "https://" +
           ENV['FRONT_URL'] + 
           "/customers/" + 
           id.to_s
