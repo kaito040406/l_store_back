@@ -1,4 +1,4 @@
-class Api::V1::MeMosController < ApplicationController
+class Api::V1::MemosController < ApplicationController
   before_action :authenticate_api_v1_user!
   def index
     trg_user = LineCustomer.find(params[:line_customer_id])
