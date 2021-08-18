@@ -1,4 +1,6 @@
 class Chat < ApplicationRecord
-  belongs_to :line_costmer
-  mount_uploader :image, ThumbnailUploader
+  # validates :body, presence: true
+  belongs_to :line_customer
+  has_many :chatimage, dependent: :destroy
+  mount_uploader :chat_image, ThumbnailUploader
 end

@@ -1,4 +1,4 @@
-class Api::V1::TokensController < ApplicationController
+class Api::V1::TokensController < LineCommonsController
 
   before_action :authenticate_api_v1_user!
   # IDがあるかを確認する回数
@@ -12,27 +12,22 @@ class Api::V1::TokensController < ApplicationController
     if Token.exists?(user_id: current_api_v1_user.id)
       # 更新の場合
       # result = update_sql(current_api_v1_user.id,params[:chanel_id],params[:chanel_secret],params[:message_token],params[:login_token])
-      @trg = Token.find_by(user_id: current_api_v1_user.id)
-      result = @trg.update(token_params)
+      trg = Token.find_by(user_id: current_api_v1_user.id)
+      result = trg.update(token_params)
       if result
-        render json: { status: 'SUCCESS', data: current_api_v1_user }
-        return
+        render json: { status: 'SUCCESS' }
       else
-        render json: { status: 'ERROR', data: current_api_v1_user }
-        return
+        render json: { status: 'ERROR'}
       end
     else
       # 新規作成の場合
-      @token = Token.new(token_params)
-      @token.user_id = current_api_v1_user.id
-      @token.access_id = make_random_id()
-      # binding.pry
-      if @token.save
-        render json: { status: 'SUCCESS', data: current_api_v1_user }
-        return
+      access_id = make_random_id()
+      web_hook_url = make_web_hook_url(access_id)
+      result = token_insert(params[:chanel_id], current_api_v1_user.id,params[:chanel_secret], params[:messaging_token], params[:login_token],access_id,web_hook_url)
+      if result
+        render json: { status: 'SUCCESS' }
       else
-        render json: { status: 'ERROR', data: current_api_v1_user }
-        return
+        render json: { status: 'ERROR' }
       end
     end
   end
@@ -44,6 +39,17 @@ class Api::V1::TokensController < ApplicationController
   private
   def token_params
     params.require(:token).permit(:chanel_id, :chanel_secret, :messaging_token, :login_token)
+  end
+  # 2021-8-11バグ対応で追加
+  def token_insert(chanel_id, user_id, chanel_secret, messaging_token, login_token, access_id, web_hook_url)
+    result = Token.create(chanel_id: chanel_id, 
+                          user_id: user_id, 
+                          chanel_secret: chanel_secret, 
+                          messaging_token: messaging_token, 
+                          login_token: login_token, 
+                          access_id: access_id, 
+                          web_hook_url: web_hook_url)    
+    return result
   end
 
   def is_login()
@@ -58,7 +64,9 @@ class Api::V1::TokensController < ApplicationController
 
   end
 
+  def insert
 
+  end
 
   # アクセスID作成用の関数
   def make_random_id()
@@ -77,5 +85,16 @@ class Api::V1::TokensController < ApplicationController
     else
       return 0
     end
+  end
+
+  # webhook作成用の関数
+  # urlのテキスト情報を返却
+  def make_web_hook_url(access_id)
+    url = 
+      ENV['BACK_URL'] + 
+      "/api/v1/tokens/" + 
+      access_id + 
+      "/line_customers"
+    return url
   end
 end

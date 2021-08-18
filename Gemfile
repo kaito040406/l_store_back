@@ -51,3 +51,7 @@ gem 'fog-aws'
 gem "carrierwave"
 gem 'mini_magick'
 gem 'line-bot-api'
+
+# 定期処理用gem
+# アプリケーションから使わないのでrequire: false
+gem 'whenever', require: false

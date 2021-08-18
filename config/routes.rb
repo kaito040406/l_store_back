@@ -11,21 +11,29 @@ Rails.application.routes.draw do
       resources :tokens
 
       resources :tokens, param: :access_id do
-        resources :line_costmers, only: [:create]
+        resources :line_customers, only: [:create]
       end
 
       resources :tokens, param: :user_id do
-        resources :line_costmers, except: [:create]
+        resources :line_customers, except: [:create]
       end
 
-      resources :line_costmers do
+      resources :line_customers do
         resources :chats
+        resources :memos
+        resources :l_groups do
+          resources :line_customer_l_groups, only: [:create]
+        end
       end
-      
+
+      resources :l_groups, only: [:create]
 
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {
         registrations: 'api/v1/auth/registrations'
       }
+
+      # LINEへのpushメッセージ用ユーザーの登録パス
+      post "push-message-user" => "tokens#add_line_push_user"
 
       namespace :auth do
         resources :sessions, only: %i[index]
