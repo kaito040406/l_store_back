@@ -49,7 +49,7 @@ class Api::V1::ChatsController < LineCommonsController
           line.doPushMsgTo(to)
         end
 
-        msg = "success"
+        msg = {message: message, image: image}
       else
         msg = "error"
       end
