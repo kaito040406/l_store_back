@@ -22,6 +22,28 @@ bind "unix://#{Rails.root}/tmp/sockets/puma.sock"
 #
 environment ENV.fetch("RAILS_ENV") { "production" }
 
+before_fork do
+ 
+  PumaWorkerKiller.config do |config|
+ 
+    # 1.  サーバーメモリ
+    config.ram = 956
+ 
+    config.frequency = 24 * 60 * 60
+ 
+    config.percent_usage = 0.9
+ 
+    # 4. 2/3とは別にWorkerを再起動する周期(秒単位) ※(例)3分毎
+    config.rolling_restart_frequency = 5 * 60
+ 
+    # 5. 監視ログの出力
+    config.reaper_status_logs = true
+ 
+  end
+  PumaWorkerKiller.start
+end
+
+
 # Specifies the `pidfile` that Puma will use.
 pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 
