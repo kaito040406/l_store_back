@@ -24,14 +24,20 @@ class Api::V1::LineCustomersController < LineCommonsController
   def show
     trg_user = LineCustomer.find(params[:id])
 
-    # 年取得
-    year = trg_user.birth_day.year
+    begin
+      # 年取得
+      year = trg_user.birth_day.year
 
-    # 月取得
-    month = trg_user.birth_day.month
+      # 月取得
+      month = trg_user.birth_day.month
 
-    # 日取得
-    day = trg_user.birth_day.day
+      # 日取得
+      day = trg_user.birth_day.day
+    rescue
+      year =""
+      month = ""
+      day = ""
+    end
 
 
     json_data = {
