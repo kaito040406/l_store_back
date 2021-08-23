@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_17_083800) do
+ActiveRecord::Schema.define(version: 2021_08_23_024454) do
 
   create_table "chatimages", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.bigint "chat_id"
@@ -28,6 +28,15 @@ ActiveRecord::Schema.define(version: 2021_08_17_083800) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["line_customer_id"], name: "index_chats_on_line_customer_id"
+  end
+
+  create_table "follow_records", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+    t.bigint "user_id"
+    t.integer "follow", null: false
+    t.integer "unfollow", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_follow_records_on_user_id"
   end
 
   create_table "images", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
@@ -73,6 +82,16 @@ ActiveRecord::Schema.define(version: 2021_08_17_083800) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "blockflg"
+    t.string "last_name"
+    t.date "birth_day"
+    t.string "age"
+    t.integer "sex"
+    t.string "mail"
+    t.string "encrypted_address"
+    t.string "encrypted_address_iv"
+    t.string "encrypted_tel_num"
+    t.string "encrypted_tel_num_vi"
+    t.string "first_name"
     t.index ["user_id"], name: "index_line_customers_on_user_id"
   end
 
@@ -98,12 +117,16 @@ ActiveRecord::Schema.define(version: 2021_08_17_083800) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "user_id"
-    t.string "chanel_id", limit: 10, null: false
-    t.string "chanel_secret", limit: 32, null: false
-    t.string "messaging_token", limit: 172, null: false
-    t.string "login_token", limit: 172, null: false
     t.string "access_id", limit: 12, null: false
     t.string "web_hook_url"
+    t.string "encrypted_chanel_id"
+    t.string "encrypted_chanel_id_iv"
+    t.string "encrypted_chanel_secret"
+    t.string "encrypted_chanel_secret_iv"
+    t.text "encrypted_messaging_token"
+    t.string "encrypted_messaging_token_iv"
+    t.text "encrypted_login_token"
+    t.string "encrypted_login_token_iv"
     t.index ["user_id"], name: "index_tokens_on_user_id"
   end
 
@@ -134,6 +157,7 @@ ActiveRecord::Schema.define(version: 2021_08_17_083800) do
 
   add_foreign_key "chatimages", "chats"
   add_foreign_key "chats", "line_customers"
+  add_foreign_key "follow_records", "users"
   add_foreign_key "images", "messages"
   add_foreign_key "images", "users"
   add_foreign_key "l_groups", "users"

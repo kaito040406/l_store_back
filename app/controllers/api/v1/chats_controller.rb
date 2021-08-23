@@ -1,10 +1,7 @@
 class Api::V1::ChatsController < LineCommonsController
   before_action :authenticate_api_v1_user!
   def index
-    chats = LineCustomer.
-            left_joins(:chats).
-            select('chats.*','line_customers.image').
-            where(chats: {line_customer_id: params[:line_customer_id]})
+    chats = Chat.where(line_customer_id: params[:line_customer_id])
     render json: chats
   end
 
@@ -49,7 +46,16 @@ class Api::V1::ChatsController < LineCommonsController
           line.doPushMsgTo(to)
         end
 
-        msg = {message: message, image: image}
+        msg = {
+          body: result.body,
+          chat_image: result.chat_image,
+          created_at: result.created_at,
+          id: result.id,
+          image: trg_line_user.image,
+          line_customer_id: result.line_customer_id,
+          send_flg: result.send_flg,
+          updated_at: result.updated_at
+        }
       else
         msg = "error"
       end
