@@ -107,7 +107,7 @@ class Api::V1::LineCustomersController < LineCommonsController
   # 受け取ったテキスト情報から日付に変換するメソッド
   def make_day(year,month,day)
 
-    date = Date.pase(year + "/" + month + "/" + day)
+    date = Date.parse(year + "/" + month + "/" + day)
 
     return date
   end
