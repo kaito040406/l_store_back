@@ -28,17 +28,17 @@ class Api::V1::LineCustomersController < LineCommonsController
 
     begin
       # 年取得
-      year = trg_user.birth_day.year
+      year = trg_user.birth_day.year.to_i
 
       # 月取得
-      month = trg_user.birth_day.month
+      month = trg_user.birth_day.month.to_i
 
       # 日取得
-      day = trg_user.birth_day.day
+      day = trg_user.birth_day.day.to_i
     rescue
-      year =""
-      month = ""
-      day = ""
+      year = nil
+      month = nil
+      day = nil
     end
 
 
@@ -47,16 +47,16 @@ class Api::V1::LineCustomersController < LineCommonsController
       "user_id" => trg_user.user_id,
       "name" => trg_user.name,
       "image" => trg_user.image,
-      "last_name" => trg_user.last_name,
-      "first_name" => trg_user.first_name,
+      "lastName" => trg_user.last_name,
+      "firstName" => trg_user.first_name,
       "year" => year,
       "month" => month,
       "day" => day,
-      "age" => trg_user.age,
-      "sex" => trg_user.sex,
+      "age" => trg_user.age.to_i,
+      "sex" => trg_user.sex.to_i,
       "address" => trg_user.address,
-      "tel_num" => trg_user.tel_num,
-      "mail" => trg_user.mail
+      "tel" => trg_user.tel_num,
+      "email" => trg_user.mail
     }
     render json: json_data
   end
@@ -89,14 +89,14 @@ class Api::V1::LineCustomersController < LineCommonsController
       birth_day = make_day(params[:year],params[:month],params[:day])
 
       line_customer.update(
-        last_name: params[:last_name],
-        first_name: params[:first_name],
+        last_name: params[:lastName],
+        first_name: params[:firstName],
         birth_day: birth_day, 
         age: params[:age], 
         sex: params[:sex], 
         address: params[:address], 
-        tel_num: params[:tel_num], 
-        mail: params[:mail])
+        tel_num: params[:tel], 
+        mail: params[:email])
       msg = "success"
     rescue => e
       msg = e
@@ -109,7 +109,7 @@ class Api::V1::LineCustomersController < LineCommonsController
   # 受け取ったテキスト情報から日付に変換するメソッド
   def make_day(year,month,day)
 
-    date = Date.parse(year + "/" + month + "/" + day)
+    date = Date.parse(year.to_s + "/" + month.to_s + "/" + day.to_s)
 
     return date
   end
