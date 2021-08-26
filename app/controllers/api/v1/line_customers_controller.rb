@@ -4,17 +4,19 @@ class Api::V1::LineCustomersController < LineCommonsController
   require 'uri'
   require 'json'
 
-  before_action :authenticate_api_v1_user!, except: :create
+  # before_action :authenticate_api_v1_user!, except: :create
 
   def index
     line_users = LineCustomer.where(user_id: current_api_v1_user.id, blockflg: "0").pluck(:id,:user_id,:name,:image)
     json_array = []
     line_users.each do |line_user|
+      
       json_data = {
         "id" => line_user[0],
         "user_id" => line_user[1],
         "name" => line_user[2],
-        "image" => line_user[3]
+        "image" => line_user[3],
+
       }
       json_array.push(json_data)
     end

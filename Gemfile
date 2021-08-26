@@ -58,3 +58,6 @@ gem 'whenever', require: false
 
 # 暗号化用のgem
 gem "attr_encrypted"
+
+# メール送信用のgem
+gem 'sendgrid-ruby'

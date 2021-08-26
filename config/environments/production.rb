@@ -110,4 +110,15 @@ Rails.application.configure do
   # config.active_record.database_selector = { delay: 2.seconds }
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
+  config.action_mailer.default_options = { from: ENV['FROM_ADDRESS'] }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :enable_starttls_auto => true,
+    :address => ENV['MAIL_HOST'],
+    :port => 587,
+    :domain => ENV['MAIL_DOMAIN'],
+    :user_name => ENV['MAIL_USER'],
+    :password => ENV['SENDGRID_WEB_API_KEY'],
+    :authentication => :plain,
+  }
 end
