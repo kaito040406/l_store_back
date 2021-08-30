@@ -24,6 +24,12 @@ set :output, 'log/cron_log.log'
 # ジョブの実行環境の指定
 set :environment, :production
 
+# 1日１回午前0時に実行
+every 1.day, :at => '0:00' do
+  # 90日以上前のチャットデータ削除
+  rake 'age_check:age_check'
+end
+
 # 1日１回午前1時に実行
 every 1.day, :at => '1:00' do
   # 90日以上前のチャットデータ削除

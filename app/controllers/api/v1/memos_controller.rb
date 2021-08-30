@@ -22,7 +22,7 @@ class Api::V1::MemosController < ApplicationController
     render json: memo
   end
 
-  def delete
+  def destroy
     # 対象のデータ取得
     trg_memo = LineCustomerMemo.find(params[:id])
 

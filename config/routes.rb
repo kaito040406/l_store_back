@@ -33,8 +33,6 @@ Rails.application.routes.draw do
         registrations: 'api/v1/auth/registrations'
       }
 
-      # LINEへのpushメッセージ用ユーザーの登録パス
-      post "push-message-user" => "tokens#add_line_push_user"
 
       namespace :auth do
         resources :sessions, only: %i[index]

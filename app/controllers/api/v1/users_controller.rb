@@ -7,50 +7,39 @@ class Api::V1::UsersController < ApplicationController
 
       # からの配列を用意
       follow_record_histories = []
+      follow_sum_record_histories = []
+      follow_record_days = []
 
-      # 制御用の変数
-      i = 0
-
-      # 現在のフォロー数用の変数を用意
-      now_follow = nil
-
-      # 現在のブロック数用の変数を用意
-      now_unfollow = nil
-
-      # 現在の有効フォロー数用の変数を用意
-      now_sum_follow = nil
 
       # 取得したデータをもとに配列データを作成
       follow_records.each do |follow_record|
 
-        if i == 0
-          # 最新の日付のもののみ取得
-          now_follow = follow_record.follow
-          now_unfollow = follow_record.unfollow
-          now_sum_follow = now_follow + now_unfollow
-        end
-
         # そうフォロワー数を取得
         follow_sum = follow_record.follow + follow_record.unfollow
 
-        # データ作成
-        data = {
-          "follow" => follow_record.follow,
-          "sum_follow" => follow_sum
-        }
-
-        # 作成したデータを配列に入れる
-        follow_record_histories.push(data)
+        # 配列に追加
+        follow_record_histories.push(follow_record.follow)
+        follow_sum_record_histories.push(follow_sum)
+        follow_record_days.push(follow_record.created_at.strftime("%m月%d日"))
 
         i = i + 1
       end
 
       json_data = {
         "message" => "success",
-        "now_follow" => now_follow,
-        "now_unfollow" => now_unfollow,
-        "now_sum_follow" => now_sum_follow,
-        "follow_history" => follow_record_histories
+        "datasets" => [
+          {
+            "backgroundColor" => "#3f51b5",
+            "data" => follow_record_histories,
+            "label" "フォロー数"
+          },
+          {
+            "backgroundColor" => "#3f51b5",
+            "data" => follow_record_histories,
+            "label" "有効フォロー数"      
+          }
+        ],
+        "labels" => follow_record_days
       }
     rescue => e
       json_data = {

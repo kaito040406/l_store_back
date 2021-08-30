@@ -7,16 +7,23 @@ class Api::V1::LineCustomersController < LineCommonsController
   # before_action :authenticate_api_v1_user!, except: :create
 
   def index
-    line_users = LineCustomer.where(user_id: current_api_v1_user.id, blockflg: "0").pluck(:id,:user_id,:name,:image)
+    line_users = LineCustomer.where(user_id: current_api_v1_user.id, blockflg: "0").pluck(:id,:user_id,:name,:image,:last_name,:first_name,:mail)
     json_array = []
     line_users.each do |line_user|
-      
+
+      begin
+        full_name = line_user[4] + line_user[5]
+      rescue 
+        full_name = ""
+      end
+
       json_data = {
         "id" => line_user[0],
         "user_id" => line_user[1],
         "name" => line_user[2],
         "image" => line_user[3],
-
+        "full_name" => full_name,
+        "mail" => line_user[6]
       }
       json_array.push(json_data)
     end
