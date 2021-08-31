@@ -3,7 +3,7 @@ class Api::V1::LineCustomersController < LineCommonsController
   require 'net/http'
   require 'uri'
   require 'json'
-
+  require "date"
   # before_action :authenticate_api_v1_user!, except: :create
 
   def index
@@ -94,12 +94,13 @@ class Api::V1::LineCustomersController < LineCommonsController
 
       # 受け取った年月日をdate型に変換
       birth_day = make_day(params[:year],params[:month],params[:day])
+      age = make_age(birth_day)
 
       line_customer.update(
         last_name: params[:lastName],
         first_name: params[:firstName],
         birth_day: birth_day, 
-        age: params[:age], 
+        age: age, 
         sex: params[:sex], 
         address: params[:address], 
         tel_num: params[:tel], 
@@ -119,5 +120,24 @@ class Api::V1::LineCustomersController < LineCommonsController
     date = Date.parse(year.to_s + "/" + month.to_s + "/" + day.to_s)
 
     return date
+  end
+
+  # 年齢算出
+  def make_age(birth_day)
+      # 今日の日付を取得
+      d = Date.today
+
+      # 計算用フォーマット
+      cal_day = d.strftime("%Y%m%d")
+
+      # 誕生日を計算用に変換
+      cal_birth_day = birth_day.strftime("%Y%m%d")
+
+      # 年齢の計算
+      age = (cal_day.to_i - cal_birth_day.to_i)/10000
+
+      # 年齢を戻す
+      return age
+      
   end
 end
