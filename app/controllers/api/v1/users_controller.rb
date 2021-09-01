@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   # ここは後ほど修正
-  before_action :authenticate_api_v1_user!
+  # before_action :authenticate_api_v1_user!
   def show
     begin
       # ユーザーの公式アカウントに対するフォロー情報を取得
