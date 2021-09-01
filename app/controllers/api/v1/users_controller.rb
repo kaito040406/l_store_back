@@ -5,7 +5,7 @@ class Api::V1::UsersController < ApplicationController
     begin
       # ユーザーの公式アカウントに対するフォロー情報を取得
     # ここは後ほど修正
-      follow_records = FollowRecord.where(user_id: current_api_v1_user.id).order(created_at: "ASC").limit(7)
+      follow_records = FollowRecord.where(user_id: 1).order(created_at: "ASC").limit(7)
 
       # からの配列を用意
       follow_record_histories = []
