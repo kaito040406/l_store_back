@@ -1,9 +1,11 @@
 class Api::V1::UsersController < ApplicationController
-  # before_action :authenticate_api_v1_user!
+  # ここは後ほど修正
+  before_action :authenticate_api_v1_user!
   def show
     begin
       # ユーザーの公式アカウントに対するフォロー情報を取得
-      follow_records = FollowRecord.where(user_id: 1).order(created_at: "ASC")
+    # ここは後ほど修正
+      follow_records = FollowRecord.where(user_id: current_api_v1_user.id).order(created_at: "ASC").limit(7)
 
       # からの配列を用意
       follow_record_histories = []
@@ -32,8 +34,8 @@ class Api::V1::UsersController < ApplicationController
         # "message" => "success",
         "datasets" => [
           {
-            "backgroundColor" => "#43a047",
-            "borderColor" => "#43a047",
+            "backgroundColor" => "#06c755",
+            "borderColor" => "#06c755",
             "data" => follow_record_histories,
             "label" => "フォロー数"
           },
@@ -49,9 +51,54 @@ class Api::V1::UsersController < ApplicationController
     rescue => e
       json_data = {
         # "message" => "error",
-        "detail" => e
+        "datasets" => e
       }
     end
+    render json: json_data
+  end
+  def get_follow_data
+    # 最新のユーザーを1件取得
+    # ここは後ほど修正
+    follow_records = FollowRecord.where(user_id: current_api_v1_user.id).order(created_at: :desc).limit(2)
+
+    # 返却用の配列を用意
+    follow_count = 0
+    unfollow_count = 0
+    pre_follow_count = 0
+    pre_unfollow_count = 0
+
+    # ループ制御用の変数
+    i = 0
+
+    follow_records.each do |follow_record|
+      if i == 0
+        follow_count = follow_record.follow
+        unfollow_count = follow_record.unfollow
+      else
+        pre_follow_count = follow_record.follow
+        pre_unfollow_count = follow_record.unfollow
+      end
+      # iをインクリメント
+      i = i + 1
+    end
+
+    # 増加量を計算
+    gain_follow = follow_count - pre_follow_count
+    gain_unfollow = unfollow_count - pre_unfollow_count
+
+    valid_account = (follow_count.to_f / (follow_count.to_f + unfollow_count.to_f)) * 100
+
+
+    json_data = {
+      "follow_count" => follow_count + unfollow_count,
+      "unfollow_count" => unfollow_count,
+      "pre_follow_count" => pre_follow_count,
+      "pre_unfollow_count" => pre_unfollow_count,
+      "gain_follow" => gain_follow,
+      "gain_unfollow" => gain_unfollow,
+      "valid_account" => valid_account.ceil(1)
+    }
+
     render json: json_data
   end
 end
