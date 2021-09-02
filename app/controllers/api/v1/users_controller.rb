@@ -16,7 +16,6 @@ class Api::V1::UsersController < ApplicationController
 
       # 取得したデータをもとに配列データを作成
       follow_records.each do |follow_record|
-
         # そうフォロワー数を取得
         follow_sum = follow_record.follow + follow_record.unfollow
 
@@ -36,7 +35,7 @@ class Api::V1::UsersController < ApplicationController
           {
             "backgroundColor" => "#06c755",
             "borderColor" => "#06c755",
-            "data" => follow_record_histories,
+            "data" => follow_sum_record_histories,
             "label" => "フォロー数"
           },
           {
@@ -59,7 +58,7 @@ class Api::V1::UsersController < ApplicationController
   def get_follow_data
     # 最新のユーザーを1件取得
     # ここは後ほど修正
-    follow_records = FollowRecord.where(user_id: current_api_v1_user.id).order(created_at: :desc).limit(2)
+    follow_records = FollowRecord.where(user_id: 1).order(created_at: :desc).limit(2)
 
     # 返却用の配列を用意
     follow_count = 0
