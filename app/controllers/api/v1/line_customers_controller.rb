@@ -4,7 +4,7 @@ class Api::V1::LineCustomersController < LineCommonsController
   require 'uri'
   require 'json'
   require "date"
-  # before_action :authenticate_api_v1_user!, except: :create
+  before_action :authenticate_api_v1_user!, except: :create
 
   def index
     line_users = LineCustomer.where(user_id: current_api_v1_user.id, blockflg: "0").pluck(:id,:user_id,:name,:image,:last_name,:first_name,:mail)

@@ -7,7 +7,13 @@ Rails.application.routes.draw do
 
       resources :users, only: [:show]
 
+      get '/users/:id/last_seven_day', to: 'users#last_seven_day'
+
+      get '/users/:id/last_seven_week', to: 'users#last_seven_week'
+
       get '/users/:id/follow_data', to: 'users#get_follow_data'
+
+      post '/users/:id/create_subscription', to: 'users#create_subscription'
 
       # end
       resources :messages
@@ -41,5 +47,6 @@ Rails.application.routes.draw do
       end
     end
   end
+  mount StripeEvent::Engine, at: '/webhooks/stripe'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
