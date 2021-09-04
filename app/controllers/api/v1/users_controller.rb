@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   # ここは後ほど修正
-  # before_action :authenticate_api_v1_user!
+  before_action :authenticate_api_v1_user!
   # 過去７日間のデータを取得
   def last_seven_day
     begin
