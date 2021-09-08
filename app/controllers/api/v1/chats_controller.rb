@@ -1,5 +1,6 @@
 class Api::V1::ChatsController < LineCommonsController
   before_action :authenticate_api_v1_user!
+  before_action :active_check
   def index
     chats = Chat.where(line_customer_id: params[:line_customer_id])
     render json: chats

@@ -8,8 +8,6 @@ class User < ActiveRecord::Base
   has_many :push_users, dependent: :destroy
   has_many :l_groups, dependent: :destroy
 
-  attr_encrypted :credit_id, key: 'This is a key that is 191 bits!!'
-
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   include DeviseTokenAuth::Concerns::User

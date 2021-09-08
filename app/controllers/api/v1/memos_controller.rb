@@ -1,8 +1,9 @@
 class Api::V1::MemosController < ApplicationController
   before_action :authenticate_api_v1_user!
+  before_action :active_check
   def index
     trg_user = LineCustomer.find(params[:line_customer_id])
-    memos = LineCustomerMemo.where(line_customer_id: trg_user.id)
+    memos = LineCustomerMemo.where(line_customer_id: trg_user.id).order(id: "DESC")
     render json: memos
   end
 

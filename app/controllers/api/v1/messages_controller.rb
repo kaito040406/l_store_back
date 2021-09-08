@@ -1,5 +1,6 @@
 class Api::V1::MessagesController < ApplicationController
   before_action :authenticate_api_v1_user!
+  before_action :active_check
   require './app/commonclass/linepush'
   def initialize()
 

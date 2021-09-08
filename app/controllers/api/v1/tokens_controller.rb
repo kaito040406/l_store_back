@@ -1,6 +1,7 @@
 class Api::V1::TokensController < LineCommonsController
 
   before_action :authenticate_api_v1_user!
+  before_action :active_check
   # IDがあるかを確認する回数
   @@recount = 5
 

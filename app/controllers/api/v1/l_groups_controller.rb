@@ -1,5 +1,6 @@
 class Api::V1::LGroupsController < ApplicationController
   before_action :authenticate_api_v1_user!
+  before_action :active_check
   def create
     # groupの名前のパラメータ取得
     group_name = params[:name]
