@@ -37,17 +37,17 @@ class Api::V1::UsersController < ApplicationController
           {
             "backgroundColor" => "#06c755",
             "borderColor" => "#06c755",
-            "data" => follow_sum_record_histories,
+            "data" => follow_sum_record_histories.reverse,
             "label" => "フォロー数"
           },
           {
             "backgroundColor" => "#e53935",
             "borderColor" => "#e53935",
-            "data" => unfollow_record_histories,
+            "data" => unfollow_record_histories.reverse,
             "label" => "ブロック数"      
           }
         ],
-        "labels" => follow_record_days
+        "labels" => follow_record_days.reverse
       }
     rescue => e
       json_data = {
@@ -98,17 +98,17 @@ class Api::V1::UsersController < ApplicationController
           {
             "backgroundColor" => "#06c755",
             "borderColor" => "#06c755",
-            "data" => follow_sum_record_histories,
+            "data" => follow_sum_record_histories.reverse,
             "label" => "フォロー数"
           },
           {
             "backgroundColor" => "#e53935",
             "borderColor" => "#e53935",
-            "data" => unfollow_record_histories,
+            "data" => unfollow_record_histories.reverse,
             "label" => "ブロック数"      
           }
         ],
-        "labels" => follow_record_days
+        "labels" => follow_record_days.reverse
       }
     rescue => e
       json_data = {
@@ -152,17 +152,17 @@ class Api::V1::UsersController < ApplicationController
           {
             "backgroundColor" => "#06c755",
             "borderColor" => "#06c755",
-            "data" => follow_sum_record_histories,
+            "data" => follow_sum_record_histories.reverse,
             "label" => "フォロー数"
           },
           {
             "backgroundColor" => "#e53935",
             "borderColor" => "#e53935",
-            "data" => unfollow_record_histories,
+            "data" => unfollow_record_histories.reverse,
             "label" => "ブロック数"      
           }
         ],
-        "labels" => follow_record_days
+        "labels" => follow_record_days.reverse
       }
     rescue => e
       json_data = {
