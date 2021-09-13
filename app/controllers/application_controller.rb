@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
         helper_method :current_api_v1_user, :user_signed_in?
 
         def active_check
-                user = User.find(current_api_v1_user.id)
+                user = current_api_v1_user
                 # 現在時刻取得
                 now = Time.current
                 # サービスの状態がactiveではないもしくは、有効期限が切れている場合、サービスの機能をストップ

@@ -32,7 +32,9 @@ class Api::V1::LineCustomersController < LineCommonsController
   end
 
   def show
+    # 対象のラインユーザーを取得
     trg_user = LineCustomer.find(params[:id])
+
 
     begin
       # 年取得
