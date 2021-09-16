@@ -8,10 +8,9 @@ class LineCommonsController < ApplicationController
     # イベントタイプとラインのIDを取得
     event_type = params[:events][0][:message][:type]
     original_id = params[:events][0][:source][:userId]
-    
     # ユーザーが存在するかを確認
     if !LineCustomer.exists?(user_id: @token.user_id, original_id: original_id)
-
+      logger.debug(@token.user_id)
       # 以下プロフィール情報を取得
       profile_hash = get_line_profile(original_id,@token.messaging_token)
       # 以上プロフィール情報を取得

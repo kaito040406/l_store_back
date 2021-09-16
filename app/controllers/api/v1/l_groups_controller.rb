@@ -22,20 +22,20 @@ class Api::V1::LGroupsController < ApplicationController
       # 返却用のデータ作成
       json_data = {
         json:  {
-          "status" => 200,
           "msg" => "succsess",
           "groupNameList" => group_name_list
-        }
+        },
+        status: 200
       }
     rescue => e
 
       # 処理が失敗した際の返却データ
       json_data = {
         json:  {
-          "status" => 500,
           "msg" => "error",
           "error" => e
-        }
+        },
+        status: 500
       }
     end
 
@@ -50,21 +50,21 @@ class Api::V1::LGroupsController < ApplicationController
       # 返却用のデータ作成
       json_data = {
         json:  {
-          "status" => 200,
           "msg" => "succsess",
           "groupId" => result.id,
           "groupName" => result.name
-        }
+        },
+        status: 200
       }
     rescue => e
 
       # 処理が失敗した際の返却データ
       json_data = {
         json:  {
-          "status" => 500,
           "msg" => "error",
           "error" => e
-        }
+        },
+        status: 500
       }
     end
     render json_data
@@ -81,21 +81,21 @@ class Api::V1::LGroupsController < ApplicationController
       # 返却用のデータ作成
       json_data = {
         json:  {
-          "status" => 200,
           "msg" => "succsess",
           "groupId" => result.id,
           "groupName" => result.name
-        }
+        },
+        status: 200
       }
     rescue => e
 
       # 処理が失敗した際の返却データ
       json_data = {
         json:  {
-          "status" => 500,
           "msg" => "error",
           "error" => e
-        }
+        },
+        status: 500
       }
     end
 
@@ -113,19 +113,19 @@ class Api::V1::LGroupsController < ApplicationController
       # 返却用のデータ作成
       json_data = {
         json:  {
-          "status" => 200,
           "msg" => "succsess",
-        }
+        },
+        status: 200
       }
     rescue => e
 
       # 処理が失敗した際の返却データ
       json_data = {
         json:  {
-          "status" => 500,
           "msg" => "error",
           "error" => e
-        }
+        },
+        status: 500
       }
     end
   end

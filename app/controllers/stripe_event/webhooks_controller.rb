@@ -1,5 +1,7 @@
 class StripeEvent::WebhooksController < ApplicationController
   # skip_before_action :verify_authenticity_token,except: :stripe_webhook
+  # 構成としては引き落としが成功にのみ動作する
+  # 引き落としに失敗したらこちらで指定した有効期限が更新されずサービスが停止する
   require './app/commonclass/stripe_paid'
   SIGNING_SECRET = ENV['SIGNING_SECRET']
   def event
@@ -33,7 +35,7 @@ class StripeEvent::WebhooksController < ApplicationController
       stripe_subscription_deleted.set_parameter(object)
     
     else
-      puts "Unhandled event type: #{event.type}"
+      logger.info("Unhandled event type: #{event.type}")
     end
 
 
@@ -47,7 +49,7 @@ class StripeEvent::WebhooksController < ApplicationController
     # 何らかのエラー処理
     head 400
   rescue StandardError => e
-    logger.debug(e)
+    logger.error(e)
     # 何らかのエラー処理
     # ビジネスロジック上のエラーではなく、
     # 受信自体のエラー発生時に 500 を返すべき。

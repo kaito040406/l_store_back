@@ -8,26 +8,20 @@ class Api::V1::LineCustomersController < LineCommonsController
   before_action :active_check, except: :create
 
   def index
-    line_users = LineCustomer.where(user_id: current_api_v1_user.id, blockflg: "0").pluck(:id,:user_id,:name,:image,:last_name,:first_name,:mail)
-    json_array = []
-    line_users.each do |line_user|
 
-      begin
-        full_name = line_user[4] + line_user[5]
-      rescue 
-        full_name = ""
-      end
+    line_users = LineCustomer.where(
+      user_id: current_api_v1_user.id,
+      blockflg: "0"
+    ).pluck(
+      :id,
+      :user_id,
+      :name,
+      :image,
+      :last_name,
+      :first_name,
+      :mail)
 
-      json_data = {
-        "id" => line_user[0],
-        "user_id" => line_user[1],
-        "name" => line_user[2],
-        "image" => line_user[3],
-        "full_name" => full_name,
-        "mail" => line_user[6]
-      }
-      json_array.push(json_data)
-    end
+    json_array = make_index_json(line_users)
     render json: json_array
   end
 
@@ -115,6 +109,45 @@ class Api::V1::LineCustomersController < LineCommonsController
     render json: msg
   end
 
+  # グループ検索用のアクション
+  def tag_search_customer
+    # ログイン中のユーザーを取得
+    user = current_api_v1_user
+
+    # パラメータを取得
+    user_id = params[:user_id]
+
+    # グループのIDを取得
+    l_group_id = params[:l_group_id]
+
+    # 現在ログインしているユーザーのIDとパラメータのIDが一致していることを確認
+    if user.id == user_id
+    # if "1" == user_id
+      # 一致している場合
+      line_users = 
+      LineCustomer.where(
+        user_id: user.id
+      ).joins(
+        :line_customer_l_groups
+      ).merge(
+        LineCustomerLGroup.where(
+          l_group_id: l_group_id
+          )
+        ).pluck(
+          :id,
+          :user_id,
+          :name,
+          :image,
+          :last_name,
+          :first_name,
+          :mail)
+      json_array = make_index_json(line_users)
+      render json: json_array
+    else
+      render json: "error", status: 403
+    end
+  end
+
   private
 
   # 受け取ったテキスト情報から日付に変換するメソッド
@@ -141,6 +174,29 @@ class Api::V1::LineCustomersController < LineCommonsController
 
       # 年齢を戻す
       return age
-      
+  end
+
+  # 一覧表示用のjsonデータの作成
+  def make_index_json(line_users)
+    json_array = []
+    line_users.each do |line_user|
+
+      begin
+        full_name = line_user[4] + line_user[5]
+      rescue 
+        full_name = ""
+      end
+
+      json_data = {
+        "id" => line_user[0],
+        "user_id" => line_user[1],
+        "name" => line_user[2],
+        "image" => line_user[3],
+        "full_name" => full_name,
+        "mail" => line_user[6]
+      }
+      json_array.push(json_data)
+    end
+    return json_array
   end
 end

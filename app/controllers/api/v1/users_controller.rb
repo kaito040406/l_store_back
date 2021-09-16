@@ -238,7 +238,7 @@ class Api::V1::UsersController < ApplicationController
     token = params[:body][:stripeToken]
 
     # ユーザ情報(メールアドレスなど一意なもの)
-    client = user.uid
+    client = user.email
 
     # 顧客の詳細情報
     detail = params[:body][:detail]
@@ -265,7 +265,6 @@ class Api::V1::UsersController < ApplicationController
           # 処理が成功した際の返却データ
           json_data = {
             json: {
-              "status" => 200,
               "msg" => "success",
             }
           }
@@ -275,7 +274,6 @@ class Api::V1::UsersController < ApplicationController
           json_data = {
             status: 400,
             json:  {
-              "status" => 400,
               "msg" => "Failed to register the subscription",
             }
           }
@@ -285,7 +283,6 @@ class Api::V1::UsersController < ApplicationController
         json_data = {
           status: 400,
           json:  {
-            "status" => 400,
             "msg" => "Failed to register customer information",
           }
         }
@@ -295,7 +292,6 @@ class Api::V1::UsersController < ApplicationController
       update_customer(customer.id,client,token,detail)
       json_data = {
         json:  {
-          "status" => 200,
           "msg" => "Succeeded in updating customer information",
         }
       }
@@ -336,33 +332,48 @@ class Api::V1::UsersController < ApplicationController
 
       now_day = now.strftime("%d")
 
-      if now_day.to_i > 15
+      if now_day.to_i > 17
         # 来月を取得
         next_month = now.next_month.strftime("%Y-%m")
 
         # 請求日を算出
-        # 決済を同日の0時に行う
-        next_expiration_date = next_month + "-15 23:59:59"
+        # 決済を15日の0時に行う
+        settlement_date = next_month + "-17 00:00:00"
+        # 有効期限を同日の23:59:59とする
+        next_expiration_date = next_month + "-17 23:59:59"
       else
         # 今月を取得
         now_month = now.strftime("%Y-%m")
 
         # 請求日を算出
-        # 決済を同日の0時に行う
-        next_expiration_date = now_month + "-15 23:59:59"
-        logger.debug(next_expiration_date) 
+        # 決済を15日の0時に行う
+        settlement_date = now_month + "-17 00:00:00"
+        # 有効期限を同日の23:59:59とする
+        next_expiration_date = now_month + "-17 23:59:59"
       end
 
-      # Subsctiptionの作成
-      subscription = Stripe::Subscription.create(
-        :customer => id,
-        :items => [
-          {:price => plan}
-        ],
-        # 初回請求日時を指定
-        :billing_cycle_anchor => Time.parse(next_expiration_date).to_i,
-        :proration_behavior => "none"
-      )
+      # 15日以外の場合は決済日の指定処理
+      if now_day.to_i != 17
+        # Subsctiptionの作成
+        subscription = Stripe::Subscription.create(
+          :customer => id,
+          :items => [
+            {:price => plan}
+          ],
+          # 初回請求日時を指定
+          :billing_cycle_anchor => Time.parse(settlement_date).to_i,
+          :proration_behavior => "none"
+        )
+      else
+        # 15日以外の場合はデフォルト
+        # Subsctiptionの作成
+        subscription = Stripe::Subscription.create(
+          :customer => id,
+          :items => [
+            {:price => plan}
+          ]
+        )     
+      end
 
       # stripeにサブスクリプションを登録した後、planとサービス有効期限をdbに保存,またsubscription_statusを有効にし、active_statusを1に更新する
       user.update(plan_id: plan, service_expiration_date: next_expiration_date, subscription_status: "active" ,active_status: 1)
