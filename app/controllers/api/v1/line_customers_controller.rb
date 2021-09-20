@@ -121,7 +121,7 @@ class Api::V1::LineCustomersController < LineCommonsController
     l_group_id = params[:l_group_id]
 
     # 現在ログインしているユーザーのIDとパラメータのIDが一致していることを確認
-    if user.id == user_id
+    if user.id == user_id.to_i
     # if "1" == user_id
       # 一致している場合
       line_users = 

@@ -132,8 +132,12 @@ class LineCommonsController < ApplicationController
     begin
       if line_user.blockflg == "0"
         line_user.update(blockflg: "1")
+
+        # l_groupのcountの更新
+        cange_count(line_user)
       end
     rescue => e
+      logger.error(e)
     end
   end
 
@@ -191,5 +195,13 @@ class LineCommonsController < ApplicationController
           "/customers/" + 
           id.to_s
     return body
+  end
+
+  # アンフォロー時のl_group_count更新
+  def cange_count(line_user)
+    LineCustomerLGroup.where(line_customer_id: line_user.id).find_each do |trg_data|
+      # 対象データを削除
+      trg_data.destroy
+    end
   end
 end

@@ -4,7 +4,7 @@ class Api::V1::LGroupsController < ApplicationController
   def index
     begin
       # グループ名の一覧を取得
-      group_names = LGroup.where(user_id: current_api_v1_user.id).select("id,name")
+      group_names = LGroup.where(user_id: current_api_v1_user.id).select("id,name,count")
 
       # 空の配列を用意
       group_name_list = []
@@ -14,7 +14,8 @@ class Api::V1::LGroupsController < ApplicationController
         group_name_list.push(
           {
             "groupId" => group_name.id,
-            "groupName" => group_name.name
+            "groupName" => group_name.name,
+            "groupCount" => group_name.count
           }
         )
       end

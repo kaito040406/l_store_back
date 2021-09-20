@@ -15,9 +15,9 @@ Rails.application.routes.draw do
 
       get '/users/:id/follow_data', to: 'users#get_follow_data'
 
-      post '/users/:id/create_subscription', to: 'users#create_subscription'
-
       get '/line_customer/:user_id/search/group/:l_group_id', to: 'line_customers#tag_search_customer'
+
+      post '/users/:id/create_subscription', to: 'stripes#create_subscription'
 
       # end
       resources :messages

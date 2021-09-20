@@ -14,7 +14,7 @@ class StripePaid
 
     # 有効期限を算出
     # 決済を同日の0時に行う
-    next_expiration_date = next_month + "-15 23:59:59"
+    next_expiration_date = next_month + "-" + ENV["EXPIRATIONDATE"]+ " " + ENV["EXPIRATIONTIME"]
 
     trg_user.update(subscription_status: object[:status], service_expiration_date: next_expiration_date)
   end
