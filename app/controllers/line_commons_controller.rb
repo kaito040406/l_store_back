@@ -105,10 +105,10 @@ class LineCommonsController < ApplicationController
     else
 
       # line_customerテーブルに対象のユーザーの公式ラインユーザーがいるかを確認
-      if !LineCustomer.exists?(user_id: @token.user_id)
+      # if !LineCustomer.exists?(user_id: @token.user_id)
         # push_line_idテーブルにデータを追加
-        insert_push_user(@token.user_id, original_id)
-      end
+        # insert_push_user(@token.user_id, original_id)
+      # end
 
       # 以下プロフィール情報を取得
       profile_hash = get_line_profile(original_id,@token.messaging_token)
