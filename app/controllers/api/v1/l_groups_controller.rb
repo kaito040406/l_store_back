@@ -77,7 +77,7 @@ class Api::V1::LGroupsController < ApplicationController
       trg_group = LGroup.find_by(id: params[:id], user_id: current_api_v1_user.id)
 
       # データを更新
-      result = data_update(grtrg_groupoup, params[:group_name])
+      result = data_update(trg_group, params[:group_name])
 
       # 返却用のデータ作成
       json_data = {
@@ -89,7 +89,7 @@ class Api::V1::LGroupsController < ApplicationController
         status: 200
       }
     rescue => e
-
+      logger.error(e)
       # 処理が失敗した際の返却データ
       json_data = {
         json:  {
