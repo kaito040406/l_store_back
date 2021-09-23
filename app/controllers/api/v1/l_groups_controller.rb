@@ -138,6 +138,7 @@ class Api::V1::LGroupsController < ApplicationController
   end
 
   def data_update(group, name)
-    return group.update(name: name)
+    group.update(name: name)
+    return group
   end
 end
