@@ -42,7 +42,10 @@ class LineCommonsController < ApplicationController
         # インサートする
         insert(trg_line_user.id,text_message,nil,"1")
 
-        do_receive_push(trg_line_user.name,trg_line_user.id)
+        # 通知用のユーザーでなければ通知
+        if !PushUser.exists?(push_line_id: original_id)
+          do_receive_push(trg_line_user.name,trg_line_user.id)
+        end
       end
 
 
