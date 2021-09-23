@@ -37,6 +37,56 @@ class Api::V1::TokensController < LineCommonsController
 
   end
 
+  def get_webhook_url
+    begin
+      user_id = params[:id]
+
+      user = current_api_v1_user
+
+      if user_id.to_i == user.id
+
+        token = Token.find_by(user_id: user_id)
+
+        if token != nil
+          json_data ={
+            json: {
+              "msg" => "succsess",
+              "chanelId" => token.chanel_id,
+              "chanelSecret" => token.chanel_secret,
+              "messagingToken" => token.messaging_token,
+              "loginToken" => token.login_token,
+              "webHookUrl" => token.web_hook_url
+            },
+            status: 200
+          }
+        else
+          json_data = {
+            json: {
+              "msg" => "no data",
+            },
+            status: 404
+          }
+        end
+      else
+        json_data = {
+          json: {
+            "msg" => "no access",
+          },
+          status: 403
+        }
+      end
+    rescue => e
+      json_data = {
+        json: {
+          "msg" => "error",
+        },
+        status: 500
+      }
+    end
+    logger.debug(json_data)
+    render json_data
+  end
+
   private
   def token_params
     params.require(:token).permit(:chanel_id, :chanel_secret, :messaging_token, :login_token)
