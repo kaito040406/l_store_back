@@ -8,19 +8,26 @@ class Api::V1::MemosController < ApplicationController
   end
 
   def create
-    memo = LineCustomerMemo.create(line_customer_id: params[:line_customer_id], body: params[:body])
-
-    render json: memo
+    if params[:body].bytesize <= 6000
+      memo = LineCustomerMemo.create(line_customer_id: params[:line_customer_id], body: params[:body])
+      render json: memo
+    else
+      render json: memo, status: 422
+    end
   end
 
   def update
     # 対象のデータ取得
-    trg_memo = LineCustomerMemo.find(params[:id])
+    if params[:body].bytesize <= 6000
+      trg_memo = LineCustomerMemo.find(params[:id])
 
-    # 対象を更新
-    memo = trg_memo.update(body: params[:body])
+      # 対象を更新
+      memo = trg_memo.update(body: params[:body])
 
-    render json: memo
+      render json: memo
+    else
+      render json: memo, status: 422
+    end
   end
 
   def destroy
