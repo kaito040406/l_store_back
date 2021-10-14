@@ -34,7 +34,9 @@ class Linepush < Apicommon
   # プッシュメッセージ作成用メソッド
   def doPushMsg
     # メッセージ部分作成
-    send_message = @title + "\n" + @body
+    # send_message = @title + "\n" + @body
+    # タイトル消去なので削除 2021-10-13
+    send_message =  @body
     params = {"messages" => [{"type" => "text", "text" => send_message}]}
     doPush(params)
   end

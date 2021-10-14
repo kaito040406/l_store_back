@@ -9,20 +9,30 @@ class Api::V1::LineCustomersController < LineCommonsController
 
   def index
 
-    line_users = LineCustomer.where(
-      user_id: current_api_v1_user.id,
-      blockflg: "0"
-    ).pluck(
-      :id,
-      :user_id,
-      :name,
-      :image,
-      :last_name,
-      :first_name,
-      :mail)
+    line_users = LineCustomer.where(user_id: current_api_v1_user.id,blockflg: "0")
 
-    json_array = make_index_json(line_users)
-    render json: json_array
+    # からの配列を用意
+    line_user_list = []
+
+    line_users.each do |line_user|
+      begin
+        full_name = line_user.last_name + line_user.first_name 
+      rescue 
+        full_name = ""
+      end
+      line_user_hash ={
+        "full_name" => full_name,
+        "id" => line_user.id,
+        "image" => line_user.image,
+        "mail" => line_user.mail,
+        "name" => line_user.name,
+        "tel_num" => line_user.tel_num,
+        "user_id" => line_user.user_id
+      }
+      line_user_list.push(line_user_hash)
+    end
+
+    render json: line_user_list
   end
 
   def show

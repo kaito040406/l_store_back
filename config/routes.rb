@@ -21,6 +21,8 @@ Rails.application.routes.draw do
 
       post '/users/:id/create_subscription', to: 'stripes#create_subscription'
 
+      post '/messages/:group_id/target_message', to: 'messages#target_message'
+
       # end
       resources :messages
       resources :tokens
