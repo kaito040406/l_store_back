@@ -11,26 +11,8 @@ class Api::V1::LineCustomersController < LineCommonsController
 
     line_users = LineCustomer.where(user_id: current_api_v1_user.id,blockflg: "0")
 
-    # からの配列を用意
-    line_user_list = []
-
-    line_users.each do |line_user|
-      begin
-        full_name = line_user.last_name + line_user.first_name 
-      rescue 
-        full_name = ""
-      end
-      line_user_hash ={
-        "full_name" => full_name,
-        "id" => line_user.id,
-        "image" => line_user.image,
-        "mail" => line_user.mail,
-        "name" => line_user.name,
-        "tel_num" => line_user.tel_num,
-        "user_id" => line_user.user_id
-      }
-      line_user_list.push(line_user_hash)
-    end
+    # 配列のデータを取得  
+    line_user_list = make_user_list(line_users)
 
     render json: line_user_list
   end
@@ -134,25 +116,12 @@ class Api::V1::LineCustomersController < LineCommonsController
     if user.id == user_id.to_i
     # if "1" == user_id
       # 一致している場合
-      line_users = 
-      LineCustomer.where(
-        user_id: user.id
-      ).joins(
-        :line_customer_l_groups
-      ).merge(
-        LineCustomerLGroup.where(
-          l_group_id: l_group_id
-          )
-        ).pluck(
-          :id,
-          :user_id,
-          :name,
-          :image,
-          :last_name,
-          :first_name,
-          :mail)
-      json_array = make_index_json(line_users)
-      render json: json_array
+      line_users = LineCustomer.where(user_id: user.id).joins(:line_customer_l_groups).merge(LineCustomerLGroup.where(l_group_id: l_group_id))
+
+      # 配列のデータを取得  
+      line_user_list = make_user_list(line_users)
+      
+      render json: line_user_list
     else
       render json: "error", status: 403
     end
@@ -187,26 +156,49 @@ class Api::V1::LineCustomersController < LineCommonsController
   end
 
   # 一覧表示用のjsonデータの作成
-  def make_index_json(line_users)
-    json_array = []
-    line_users.each do |line_user|
+  def make_user_list(line_users)
+    # からの配列を用意
+    line_user_list = []
 
+    line_users.each do |line_user|
       begin
-        full_name = line_user[4] + line_user[5]
+        full_name = line_user.last_name + line_user.first_name 
+
+        # 名前がnullの時の処理
+        if full_name == nil 
+          full_name = " "
+        end
+
       rescue 
-        full_name = ""
+        full_name = " "
       end
 
-      json_data = {
-        "id" => line_user[0],
-        "user_id" => line_user[1],
-        "name" => line_user[2],
-        "image" => line_user[3],
+      # メールアドレスがnullの時の処理
+      if line_user.mail != nil
+        mail = line_user.mail      
+      else
+        mail = " "
+      end
+
+      # 電話番号がnullの時の処理
+      if line_user.tel_num != nil
+        tel_num = line_user.tel_num      
+      else
+        tel_num = " "
+      end
+
+      line_user_hash ={
         "full_name" => full_name,
-        "mail" => line_user[6]
+        "id" => line_user.id,
+        "image" => line_user.image,
+        "mail" => mail,
+        "name" => line_user.name,
+        "tel_num" => tel_num,
+        "user_id" => line_user.user_id
       }
-      json_array.push(json_data)
+      line_user_list.push(line_user_hash)
     end
-    return json_array
+
+    return line_user_list
   end
 end
