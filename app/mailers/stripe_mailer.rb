@@ -4,6 +4,7 @@ class StripeMailer < ActionMailer::Base
     @infomation = infomation
 
     mail( 
+      :from => '"L-STORE" <info@l-store.jp>',
       :to => @user.email,
       :subject => 'ご注文ありがとうございます(自動課金)'
     )
@@ -41,6 +42,7 @@ class StripeMailer < ActionMailer::Base
     @settlement_date = settlement_date
 
     mail( 
+      :from => '"L-STORE" <info@l-store.jp>',
       :to => @user.email,
       :subject => 'L-STOREお申し込み有難うございます'
     )

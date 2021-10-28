@@ -1,1 +1,71 @@
-<p>ご登録ありがとうございます。 <%= @user.name %>様</p>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Document</title>
+  <style>
+    .mail{
+    width: 60%;
+    border-radius: 10px;
+    margin: 0 auto;
+    padding: 10px 0;
+    background-color: #F9FFF3;
+    text-align: center;
+  }
+  .mail__logo{
+    width: 20%;    /* 横幅を割合で指定 */
+    height: auto;  /* 高さは自動指定 */
+  }
+  .mail__btn{
+    margin-top: 10px;
+    font-size: 24px;
+    color: #fff;
+    border: 2px solid #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-image: -webkit-gradient(linear, left top, right top, from(#B4F0C1), to(#86DC3A));
+    background-image: -webkit-linear-gradient(left, #B4F0C1 0%, #86DC3A 100%);
+    background-image: linear-gradient(to right, #B4F0C1 0%, #86DC3A 100%);
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
+  }
+  .mail__btn-link{
+    color: #fff;
+    text-decoration: none;
+  }
+  .mail__btn:hover {
+    -webkit-transform: translate(0, -2px);
+    transform: translate(0, -2px);
+    color: #fff;
+    -webkit-box-shadow: 0 8px 15px rgba(0, 0, 0, .2);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, .2);
+  }
+  .mail__container{
+    display: flex;
+    justify-content: center;
+  }
+  .mail__link{
+    color: rgb(28, 223, 223);
+  }
+  .mail__link:hover{
+  text-decoration: none;
+  }
+  span{
+    padding: 0 10px;
+  }
+  </style>
+</head>
+<body>
+  <section class="mail">
+    <img src="https://l-store-infomation.s3.ap-northeast-1.amazonaws.com/wp-content/uploads/2021/10/23054715/top-logo.png" class="mail__logo">
+    <p class="mail__text"><%= @user.name %>様。ご登録ありがとうございます。</p>
+    <p class="mail__text">L-STOREは、こちらからご使用いただけます。</p>
+    <button class="mail__btn"><a class="mail__btn-link" href="https://www.l-store.jp/">L-STORE ▶</a></button>
+    <p class="mail__inc">©オープンストア.inc</p>
+    <div class="mail__container"><a href="https://www.instagram.com/open_store_inc/" class="mail__link">instagram</a><span>|</span><a href="https://openstore-japan.com/" class="mail__link">オープンストア株式会社</a></div>
+  </section>
+</body>
+</html>
