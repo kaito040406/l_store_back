@@ -76,6 +76,21 @@ class Linepush < Apicommon
     return file
   end
 
+  # 画像が複数投稿された際の処理 numberで画像を指定する
+  def lineImgSaves(request, number)
+    @client ||= Line::Bot::Client.new { |config|
+      config.channel_secret = @secret
+      config.channel_token = @token
+    }
+    body = request.body.read
+    event = @client.parse_events_from(body)[number]
+    image_response = @client.get_message_content(event.message['id'])
+    file = File.open("/tmp/#{SecureRandom.uuid}.jpg", "w+b")
+    file.write(image_response.body)
+
+    return file
+  end
+
   # 以下privateメソッド
   private
     # プッシュメッセージ実行用のメソッド

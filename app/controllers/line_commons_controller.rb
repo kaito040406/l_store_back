@@ -51,18 +51,34 @@ class LineCommonsController < ApplicationController
 
     # メッセージタイプがimageの時
     elsif event_type == "image"
-      # 対象のline登録ユーザーを取得
-      trg_line_user = search_line_customer(original_id)
+      # 画像の枚数を取得
+      image_count = params[:events].length
 
       # 以下画像の処理
       line = Linepush.new(original_id)
       line.setToken(@token.messaging_token)
       line.setSecret(@token.chanel_secret)
-      img_file = line.lineImgSave(request)
-      # 以上画像の処理
 
-      # インサートする
-      insert(trg_line_user.id, nil,img_file,"1")
+      # 対象のline登録ユーザーを取得
+      trg_line_user = search_line_customer(original_id)
+
+      if image_count > 1
+        # 画像の枚数が1よりも大きい時
+        for i in 0..image_count-1 do
+          # LINEに画像情報を問い合わせし取得
+          img_file = line.lineImgSaves(request, i)
+          # 以下処理は修正する必要あり
+          # インサートする
+          insert(trg_line_user.id, nil,img_file,"1")
+        end
+
+      else
+        # LINEに画像情報を問い合わせし取得
+        img_file = line.lineImgSave(request)
+        # インサートする
+        insert(trg_line_user.id, nil,img_file,"1")
+      end
+      # 以上画像の処理
     end
   end
 
