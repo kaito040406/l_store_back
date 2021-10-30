@@ -139,7 +139,7 @@ class Api::V1::LineCustomersController < LineCommonsController
   def make_day(year,month,day)
 
     # データがない時はnilを返す
-    if year == "" || month == "" || day == ""
+    if year != "" && month != "" && day != ""
       date = Date.parse(year.to_s + "/" + month.to_s + "/" + day.to_s)
     else
       date = nil
