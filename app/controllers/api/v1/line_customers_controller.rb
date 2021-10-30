@@ -83,7 +83,13 @@ class Api::V1::LineCustomersController < LineCommonsController
 
       # 受け取った年月日をdate型に変換
       birth_day = make_day(params[:year],params[:month],params[:day])
-      age = make_age(birth_day)
+
+      # birth_dayがnilの時はageもnilにする
+      if birth_day != nil
+        age = make_age(birth_day)
+      else
+        age = nil
+      end
 
       line_customer.update(
         last_name: params[:lastName],
@@ -132,8 +138,12 @@ class Api::V1::LineCustomersController < LineCommonsController
   # 受け取ったテキスト情報から日付に変換するメソッド
   def make_day(year,month,day)
 
-    date = Date.parse(year.to_s + "/" + month.to_s + "/" + day.to_s)
-
+    # データがない時はnilを返す
+    if year == "" or month == "" or day == ""
+      date = Date.parse(year.to_s + "/" + month.to_s + "/" + day.to_s)
+    else
+      date = nil
+    end
     return date
   end
 
